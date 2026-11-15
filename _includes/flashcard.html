@@ -1,0 +1,23 @@
+{%- comment -%}
+練習模式的單字卡（CLAUDE.md 第 9 節）。用法：{% include flashcard.html q=q %}
+背面先放入整張題目卡的內文，practice.js 只保留「快速回答」那一段。
+{%- endcomment -%}
+{%- assign fc_q = include.q -%}
+<article class="fc" data-id="{{ fc_q.slug }}" data-category="{{ fc_q.category }}" data-status="{{ fc_q.status }}" data-difficulty="{{ fc_q.difficulty }}" data-updated="{{ fc_q.updated | date: '%Y-%m-%d' }}" style="--c: var(--cat-{{ fc_q.category }})">
+  <div class="fc-inner">
+    <div class="fc-face fc-front">
+      <div class="fc-badges">{% include category-badge.html code=fc_q.category %}{% include difficulty.html level=fc_q.difficulty %}</div>
+      <h2 class="fc-question">{{ fc_q.title }}</h2>
+      <p class="fc-hint">點一下看答案</p>
+    </div>
+    <div class="fc-face fc-back">
+      <p class="fc-back-q">{{ fc_q.title }}</p>
+      <div class="fc-answer prose">
+        {{ fc_q.content }}
+      </div>
+      <a class="fc-more" href="{{ fc_q.url | relative_url }}">看完整題目卡 →</a>
+    </div>
+  </div>
+  <span class="fc-stamp fc-stamp-ok" aria-hidden="true">熟了</span>
+  <span class="fc-stamp fc-stamp-again" aria-hidden="true">再一輪</span>
+</article>

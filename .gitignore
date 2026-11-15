@@ -1,0 +1,19 @@
+# 建置產物
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# 私人資料：含聯絡方式的原始履歷、職缺原文、原始面試筆記（見 CLAUDE.md 第 7 節）
+private/
+
+# Ruby／Bundler
+vendor/
+.bundle/
+Gemfile.lock
+
+# 系統檔
+.DS_Store
+
+# 本機工具設定
+.claude/

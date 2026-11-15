@@ -1,0 +1,6 @@
+{%- comment -%}
+題型標籤。用法：{% include category-badge.html code="behavioral" %}
+名稱與顏色從 _data/categories.yml 讀取。
+{%- endcomment -%}
+{%- assign cb = site.data.categories | where: "code", include.code | first -%}
+<span class="badge-cat" style="--c: var(--cat-{{ include.code }})">{% if cb %}{{ cb.name }}{% else %}未知題型：{{ include.code }}{% endif %}</span>

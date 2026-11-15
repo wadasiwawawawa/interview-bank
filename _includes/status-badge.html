@@ -1,0 +1,13 @@
+{%- comment -%}
+狀態標籤（CLAUDE.md 8.3）。用法：{% include status-badge.html status=page.status %}
+題目／故事：draft | polish | ready；履歷：current | archived
+{%- endcomment -%}
+{%- case include.status -%}
+  {%- when "draft" -%}{%- assign sb_label = "草稿" -%}
+  {%- when "polish" -%}{%- assign sb_label = "待修改" -%}
+  {%- when "ready" -%}{%- assign sb_label = "可上場" -%}
+  {%- when "current" -%}{%- assign sb_label = "使用中" -%}
+  {%- when "archived" -%}{%- assign sb_label = "已封存" -%}
+  {%- else -%}{%- assign sb_label = include.status -%}
+{%- endcase -%}
+<span class="badge-status is-{{ include.status }}">{{ sb_label }}</span>

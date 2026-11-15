@@ -1,0 +1,52 @@
+---
+layout: default
+---
+{%- comment -%} 履歷版本頁面（CLAUDE.md 6.4）。 {%- endcomment -%}
+{%- assign base_doc = nil -%}
+{%- if page.base and page.base != "" -%}
+  {%- assign base_doc = site.resumes | where_exp: "r", "r.slug == page.base" | first -%}
+{%- endif -%}
+{%- assign derived = site.resumes | where_exp: "r", "r.base == page.slug" | sort: "date" | reverse -%}
+{%- assign used_in = site.interviews | where_exp: "i", "i.resume == page.slug" | sort: "date" | reverse -%}
+{%- assign story_docs = "" | split: "" -%}
+{%- assign story_missing = "" -%}
+{%- assign q_ids = "" -%}
+{%- for sid in page.stories -%}
+  {%- assign hit = site.stories | where_exp: "d", "d.slug == sid" -%}
+  {%- if hit.size > 0 -%}{%- assign story_docs = story_docs | concat: hit -%}{%- else -%}{%- assign story_missing = story_missing | append: sid | append: " " -%}{%- endif -%}
+  {%- assign qs = site.questions | where_exp: "q", "q.stories contains sid" -%}
+  {%- for q in qs -%}{%- assign q_ids = q_ids | append: q.slug | append: "," -%}{%- endfor -%}
+{%- endfor -%}
+{%- assign q_ids = q_ids | split: "," | uniq -%}
+{%- assign likely_q = "" | split: "" -%}
+{%- for qid in q_ids -%}
+  {%- assign hit = site.questions | where_exp: "q", "q.slug == qid" -%}
+  {%- assign likely_q = likely_q | concat: hit -%}
+{%- endfor -%}
+<article class="doc" style="--c: {% if page.type == 'master' %}var(--accent){% else %}var(--border){% endif %}">
+  <p class="crumbs"><a href="{{ '/resumes/' | relative_url }}">履歷</a></p>
+  <header class="doc-head">
+    <div class="doc-badges"><span class="chip">{% if page.type == "master" %}主版本{% else %}職缺版本{% endif %}</span>{% include status-badge.html status=page.status %}</div>
+    <h1>{{ page.title }}</h1>
+    <ul class="meta-list">
+      <li>完成日期：{{ page.date | date: "%Y-%m-%d" }}</li>
+      <li>目標職位：{{ page.target_position }}</li>
+      {%- if page.target_company != "" %}<li>目標公司：{{ page.target_company }}</li>{% endif %}
+      <li>基底版本：{% if base_doc %}<a href="{{ base_doc.url | relative_url }}">{{ base_doc.title }}</a>{% elsif page.base and page.base != "" %}<span class="warn-text">找不到 <code>{{ page.base }}</code></span>{% else %}初版{% endif %}</li>
+    </ul>
+    {%- if page.pdf and page.pdf != "" %}
+    <p><a class="btn" href="{{ page.pdf | relative_url }}">下載 PDF（已去識別化）</a></p>
+    {%- endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  {%- if page.type == "master" %}
+  {% include backlinks.html title="從這版衍生的職缺版本" items=derived empty="還沒有從這版衍生的職缺版本。" %}
+  {%- endif %}
+  {% include backlinks.html title="這份履歷可能會被問的題目" items=likely_q empty="履歷引用的故事還沒有被任何題目卡引用。" %}
+  {% include backlinks.html title="履歷上的經歷對應的故事" items=story_docs empty="還沒有連結故事。" missing=story_missing %}
+  {% include backlinks.html title="用這版履歷投遞的面試" items=used_in empty="還沒有面試紀錄用這版履歷。" %}
+</article>

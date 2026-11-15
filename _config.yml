@@ -1,0 +1,50 @@
+# 網站設定 —— 規則見 CLAUDE.md
+title: 工作面試題庫
+description: 題目卡、故事素材、履歷版本與面試紀錄，加上單字卡練習模式的個人面試準備知識庫。
+lang: zh-Hant-TW
+timezone: Asia/Taipei
+
+# 發布到 GitHub Pages 專案頁時，baseurl 要改成 "/<repo 名稱>"
+url: "https://wadasiwawawawa.github.io"
+baseurl: "/interview-bank"
+# GitHub repo 網址（顯示在頁尾）；還沒建立就留空
+repo_url: "https://github.com/wadasiwawawawa/interview-bank"
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  auto_ids: true
+  hard_wrap: false
+
+collections:
+  questions:
+    output: true
+    permalink: /questions/:name/
+  stories:
+    output: true
+    permalink: /stories/:name/
+  resumes:
+    output: true
+    permalink: /resumes/:name/
+  interviews:
+    output: true
+    permalink: /interviews/:name/
+
+defaults:
+  - scope: { path: "", type: questions }
+    values: { layout: question, nav: questions }
+  - scope: { path: "", type: stories }
+    values: { layout: story, nav: stories }
+  - scope: { path: "", type: resumes }
+    values: { layout: resume, nav: resumes }
+  - scope: { path: "", type: interviews }
+    values: { layout: interview, nav: interviews }
+
+exclude:
+  - CLAUDE.md
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - private/
+  - vendor/
+  - .bundle/

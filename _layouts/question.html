@@ -1,0 +1,40 @@
+---
+layout: default
+---
+{%- comment -%} 題目卡頁面（CLAUDE.md 6.1）。關聯只讀 page.stories 與 page.seen_in。 {%- endcomment -%}
+{%- assign story_docs = "" | split: "" -%}
+{%- assign story_missing = "" -%}
+{%- for sid in page.stories -%}
+  {%- assign hit = site.stories | where_exp: "d", "d.slug == sid" -%}
+  {%- if hit.size > 0 -%}{%- assign story_docs = story_docs | concat: hit -%}{%- else -%}{%- assign story_missing = story_missing | append: sid | append: " " -%}{%- endif -%}
+{%- endfor -%}
+{%- assign seen_docs = "" | split: "" -%}
+{%- assign seen_missing = "" -%}
+{%- for iid in page.seen_in -%}
+  {%- assign hit = site.interviews | where_exp: "d", "d.slug == iid" -%}
+  {%- if hit.size > 0 -%}{%- assign seen_docs = seen_docs | concat: hit -%}{%- else -%}{%- assign seen_missing = seen_missing | append: iid | append: " " -%}{%- endif -%}
+{%- endfor -%}
+<article class="doc" style="--c: var(--cat-{{ page.category }})">
+  <p class="crumbs"><a href="{{ '/questions/' | relative_url }}">題目</a> / <a href="{{ '/questions/' | relative_url }}#{{ page.category }}">{% include category-badge.html code=page.category %}</a></p>
+  <header class="doc-head">
+    <div class="doc-badges">{% include status-badge.html status=page.status %}{% include difficulty.html level=page.difficulty %}</div>
+    <h1>{{ page.title }}</h1>
+    <ul class="meta-list">
+      <li>被問機率：{{ page.frequency }}</li>
+      <li>面試出現：{{ page.seen_in.size | default: 0 }} 次</li>
+      <li>更新：{{ page.updated | date: "%Y-%m-%d" }}</li>
+    </ul>
+    {%- if page.tags.size > 0 %}
+    <p class="tags">{% for t in page.tags %}<span class="tag">{{ t }}</span>{% endfor %}</p>
+    {%- endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  {% include backlinks.html title="引用的故事" items=story_docs empty="這題還沒有引用故事。" missing=story_missing %}
+  {% include backlinks.html title="在這些面試中被問過" items=seen_docs empty="還沒有在面試紀錄中出現。" missing=seen_missing %}
+
+  <p class="doc-actions"><a class="btn" href="{{ '/practice/' | relative_url }}">用單字卡練習這個題型 →</a></p>
+</article>

@@ -1,0 +1,33 @@
+---
+layout: default
+---
+{%- comment -%} 面試紀錄頁面（CLAUDE.md 6.3）。 {%- endcomment -%}
+{%- assign q_docs = "" | split: "" -%}
+{%- assign q_missing = "" -%}
+{%- for qid in page.questions -%}
+  {%- assign hit = site.questions | where_exp: "d", "d.slug == qid" -%}
+  {%- if hit.size > 0 -%}{%- assign q_docs = q_docs | concat: hit -%}{%- else -%}{%- assign q_missing = q_missing | append: qid | append: " " -%}{%- endif -%}
+{%- endfor -%}
+{%- assign cv_doc = nil -%}
+{%- if page.resume and page.resume != "" -%}
+  {%- assign cv_doc = site.resumes | where_exp: "r", "r.slug == page.resume" | first -%}
+{%- endif -%}
+<article class="doc" style="--c: var(--accent)">
+  <p class="crumbs"><a href="{{ '/interviews/' | relative_url }}">面試紀錄</a></p>
+  <header class="doc-head">
+    <div class="doc-badges"><span class="chip">{% include round-label.html round=page.round %}</span><span class="badge-result" data-result="{{ page.result }}">{{ page.result }}</span></div>
+    <h1>{{ page.industry }}（{{ page.company }}）・{{ page.position }}</h1>
+    <ul class="meta-list">
+      <li>日期：{{ page.date | date: "%Y-%m-%d" }}</li>
+      <li>公司規模：{{ page.company_size }}</li>
+      <li>形式：{{ page.format }}・{{ page.duration_min }} 分鐘</li>
+      <li>投遞履歷：{% if cv_doc %}<a href="{{ cv_doc.url | relative_url }}">{{ cv_doc.title }}</a>{% elsif page.resume and page.resume != "" %}<span class="warn-text">找不到 <code>{{ page.resume }}</code></span>{% else %}未記錄{% endif %}</li>
+    </ul>
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  {% include backlinks.html title="這場面試問到的題目" items=q_docs empty="還沒有對應到題庫的題目。" missing=q_missing %}
+</article>

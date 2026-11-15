@@ -1,0 +1,24 @@
+---
+layout: default
+title: 故事
+nav: stories
+permalink: /stories/
+---
+{%- assign stories = site.stories | sort: "updated" | reverse %}
+<header class="page-head">
+  <h1>故事素材</h1>
+  <p class="lead">用 STAR 寫好的個人經歷。一個故事可以被很多題目引用，也可以出現在不同版本的履歷上。</p>
+</header>
+
+{%- if stories.size > 0 %}
+<div class="grid">
+  {%- for s in stories %}
+  {% include card.html doc=s %}
+  {%- endfor %}
+</div>
+{%- else %}
+<div class="empty-state">
+  <h2>還沒有故事</h2>
+  <p>故事只能來自真實的經歷。把一段經歷告訴 AI（例如「我有一個經歷：……」），它會依照 <code>CLAUDE.md</code> 10.2 的流程整理成 STAR 格式，缺的細節會標成 <code>TODO</code> 請你補充，不會自己編。</p>
+</div>
+{%- endif %}

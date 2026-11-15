@@ -1,0 +1,31 @@
+---
+layout: default
+---
+{%- comment -%} 故事素材頁面（CLAUDE.md 6.2）。反向連結由題目卡與履歷的 stories 欄位自動算出。 {%- endcomment -%}
+{%- assign used_by_q = site.questions | where_exp: "q", "q.stories contains page.slug" -%}
+{%- assign used_by_cv = site.resumes | where_exp: "r", "r.stories contains page.slug" | sort: "date" | reverse -%}
+<article class="doc" style="--c: var(--accent)">
+  <p class="crumbs"><a href="{{ '/stories/' | relative_url }}">故事</a></p>
+  <header class="doc-head">
+    <div class="doc-badges"><span class="chip">{{ page.context }}</span>{% include status-badge.html status=page.status %}</div>
+    <h1>{{ page.title }}</h1>
+    <ul class="meta-list">
+      <li>期間：{{ page.period }}</li>
+      <li>角色：{{ page.role }}</li>
+      <li>更新：{{ page.updated | date: "%Y-%m-%d" }}</li>
+    </ul>
+    {%- if page.metric and page.metric != "" %}
+    <p class="metric">{{ page.metric }}</p>
+    {%- endif %}
+    {%- if page.skills.size > 0 %}
+    <p class="tags">{% for t in page.skills %}<span class="tag">{{ t }}</span>{% endfor %}</p>
+    {%- endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  {% include backlinks.html title="被以下題目引用" items=used_by_q empty="還沒有題目引用這個故事。" %}
+  {% include backlinks.html title="出現在這些履歷版本" items=used_by_cv empty="還沒有履歷版本提到這個故事。" %}
+</article>

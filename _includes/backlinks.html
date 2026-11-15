@@ -1,0 +1,21 @@
+{%- comment -%}
+反向連結區塊（CLAUDE.md 8.3）。
+用法：{% include backlinks.html title="被以下題目引用" items=docs empty="還沒有題目引用這個故事。" missing=missing_ids %}
+missing：找不到對應檔案的 id（以空白分隔），會顯示警告，方便發現引用錯誤。
+{%- endcomment -%}
+<section class="backlinks">
+  <h2>{{ include.title }}</h2>
+  {%- if include.items.size > 0 %}
+  <div class="grid grid-compact">
+    {%- for bl_doc in include.items %}
+    {% include card.html doc=bl_doc %}
+    {%- endfor %}
+  </div>
+  {%- else %}
+  <p class="empty">{{ include.empty | default: "目前沒有。" }}</p>
+  {%- endif %}
+  {%- assign bl_missing = include.missing | strip -%}
+  {%- if bl_missing != "" %}
+  <p class="warn-text">找不到這些 id 對應的檔案：<code>{{ bl_missing }}</code></p>
+  {%- endif %}
+</section>

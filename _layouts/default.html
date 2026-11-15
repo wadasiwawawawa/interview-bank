@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- if page.collection == "interviews" -%}
+    {%- capture page_title -%}面試紀錄 {{ page.date | date: "%Y-%m-%d" }}（{{ page.company }}）{%- endcapture -%}
+  {%- else -%}
+    {%- assign page_title = page.title -%}
+  {%- endif %}
+  <title>{% if page.url != "/" and page_title %}{{ page_title }}｜{% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <meta name="color-scheme" content="light dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='7' width='24' height='18' rx='3' fill='%232F5D62'/%3E%3Crect x='4' y='7' width='5' height='18' rx='2' fill='%235B8C5A'/%3E%3C/svg%3E">
+  {%- comment -%} 題型顏色由 _data/categories.yml 產生（CLAUDE.md 第 4、8 節） {%- endcomment %}
+  <style>
+    :root {
+      {%- for c in site.data.categories %}
+      --cat-{{ c.code }}: {{ c.color }};
+      {%- endfor %}
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        {%- for c in site.data.categories %}
+        --cat-{{ c.code }}: {{ c.color_dark }};
+        {%- endfor %}
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要內容</a>
+  <header class="site-header">
+    <div class="wrap site-header-inner">
+      <a class="brand" href="{{ '/' | relative_url }}">
+        <span class="brand-mark" aria-hidden="true"></span>工作面試題庫
+      </a>
+      <nav class="site-nav" aria-label="主要導覽">
+        {%- assign nav_items = "home:/:首頁|practice:/practice/:練習|questions:/questions/:題目|stories:/stories/:故事|resumes:/resumes/:履歷|interviews:/interviews/:面試紀錄" | split: "|" -%}
+        {%- for item in nav_items -%}
+          {%- assign parts = item | split: ":" %}
+        <a href="{{ parts[1] | relative_url }}"{% if page.nav == parts[0] %} aria-current="page"{% endif %}>{{ parts[2] }}</a>
+        {%- endfor %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap site-main">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>內容依照 <code>CLAUDE.md</code> 的規則維護。面試官姓名、薪資、未公開資訊與真實公司名稱一律不公開。{% if site.repo_url != "" %} <a href="{{ site.repo_url }}">GitHub repo</a>{% endif %}</p>
+    </div>
+  </footer>
+  {%- for s in page.scripts %}
+  <script src="{{ '/assets/js/' | append: s | relative_url }}" defer></script>
+  {%- endfor %}
+</body>
+</html>

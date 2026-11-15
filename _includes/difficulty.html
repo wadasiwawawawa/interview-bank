@@ -1,0 +1,3 @@
+{%- comment -%} 難度 ●○○／●●○／●●●。用法：{% include difficulty.html level=page.difficulty %} {%- endcomment -%}
+{%- assign dl = include.level | plus: 0 -%}
+<span class="difficulty" title="難度 {{ dl }}／3"><span class="visually-hidden">難度 {{ dl }}／3</span><span aria-hidden="true">{% for i in (1..3) %}{% if i <= dl %}●{% else %}○{% endif %}{% endfor %}</span></span>

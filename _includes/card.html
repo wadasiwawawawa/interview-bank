@@ -1,0 +1,34 @@
+{%- comment -%}
+列表頁用的卡片。用法：{% include card.html doc=q %}
+依文件所屬的 collection 決定卡片內容。
+{%- endcomment -%}
+{%- assign card_doc = include.doc -%}
+{%- assign card_kind = card_doc.collection -%}
+{%- if card_kind == "questions" -%}
+<a class="card" href="{{ card_doc.url | relative_url }}" style="--c: var(--cat-{{ card_doc.category }})">
+  <span class="card-badges">{% include category-badge.html code=card_doc.category %}{% include status-badge.html status=card_doc.status %}</span>
+  <span class="card-title">{{ card_doc.title }}</span>
+  <span class="card-meta">{% include difficulty.html level=card_doc.difficulty %}<span>被問機率{{ card_doc.frequency }}</span>{% if card_doc.seen_in.size > 0 %}<span>面試出現 {{ card_doc.seen_in.size }} 次</span>{% endif %}</span>
+</a>
+{%- elsif card_kind == "stories" -%}
+<a class="card" href="{{ card_doc.url | relative_url }}" style="--c: var(--accent)">
+  <span class="card-badges"><span class="chip">{{ card_doc.context }}</span>{% include status-badge.html status=card_doc.status %}</span>
+  <span class="card-title">{{ card_doc.title }}</span>
+  <span class="card-meta"><span>{{ card_doc.period }}</span><span>{{ card_doc.role }}</span></span>
+  {%- if card_doc.metric and card_doc.metric != "" %}
+  <span class="card-metric">{{ card_doc.metric }}</span>
+  {%- endif %}
+</a>
+{%- elsif card_kind == "resumes" -%}
+<a class="card" href="{{ card_doc.url | relative_url }}" style="--c: {% if card_doc.type == 'master' %}var(--accent){% else %}var(--border){% endif %}">
+  <span class="card-badges"><span class="chip">{% if card_doc.type == "master" %}主版本{% else %}職缺版本{% endif %}</span>{% include status-badge.html status=card_doc.status %}</span>
+  <span class="card-title">{{ card_doc.title }}</span>
+  <span class="card-meta"><span>{{ card_doc.date | date: "%Y-%m-%d" }}</span><span>{{ card_doc.target_position }}</span>{% if card_doc.target_company != "" %}<span>{{ card_doc.target_company }}</span>{% endif %}</span>
+</a>
+{%- elsif card_kind == "interviews" -%}
+<a class="card" href="{{ card_doc.url | relative_url }}" style="--c: var(--accent)">
+  <span class="card-badges"><span class="chip">{% include round-label.html round=card_doc.round %}</span><span class="badge-result" data-result="{{ card_doc.result }}">{{ card_doc.result }}</span></span>
+  <span class="card-title">{{ card_doc.industry }}（{{ card_doc.company }}）・{{ card_doc.position }}</span>
+  <span class="card-meta"><span>{{ card_doc.date | date: "%Y-%m-%d" }}</span><span>{{ card_doc.format }}</span><span>{{ card_doc.duration_min }} 分鐘</span>{% if card_doc.questions.size > 0 %}<span>{{ card_doc.questions.size }} 題在題庫</span>{% endif %}</span>
+</a>
+{%- endif -%}

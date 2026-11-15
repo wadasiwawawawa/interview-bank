@@ -1,0 +1,11 @@
+{%- comment -%} 面試輪次代碼轉中文（CLAUDE.md 第 5 節）。用法：{% include round-label.html round=page.round %} {%- endcomment -%}
+{%- case include.round -%}
+  {%- when "r1" -%}第一輪
+  {%- when "r2" -%}第二輪
+  {%- when "r3" -%}第三輪
+  {%- when "r4" -%}第四輪
+  {%- when "hr" -%}HR 面
+  {%- when "mgr" -%}主管面
+  {%- when "test" -%}筆試／作業
+  {%- else -%}{{ include.round }}
+{%- endcase -%}

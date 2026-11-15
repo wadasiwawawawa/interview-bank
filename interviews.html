@@ -1,0 +1,24 @@
+---
+layout: default
+title: 面試紀錄
+nav: interviews
+permalink: /interviews/
+---
+{%- assign list = site.interviews | sort: "date" | reverse %}
+<header class="page-head">
+  <h1>面試紀錄</h1>
+  <p class="lead">每場面試後的紀錄。公司一律使用代稱，不記錄面試官姓名、薪資與未公開資訊。</p>
+</header>
+
+{%- if list.size > 0 %}
+<div class="grid">
+  {%- for i in list %}
+  {% include card.html doc=i %}
+  {%- endfor %}
+</div>
+{%- else %}
+<div class="empty-state">
+  <h2>還沒有面試紀錄</h2>
+  <p>面試結束後告訴 AI「今天面試被問了……」，它會依照 <code>CLAUDE.md</code> 10.3 先去識別化，再建立紀錄，並把被問到的題目回填到題庫。</p>
+</div>
+{%- endif %}

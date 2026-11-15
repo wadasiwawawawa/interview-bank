@@ -1,0 +1,35 @@
+---
+layout: default
+title: 題目
+nav: questions
+permalink: /questions/
+scripts: [filter.js]
+---
+<header class="page-head">
+  <h1>題目</h1>
+  <p class="lead">共 {{ site.questions.size }} 題，依六大題型分類。點上方的題型可以篩選，網址也會跟著改變，可以直接分享。</p>
+</header>
+
+<nav class="filter-bar" data-filter-bar aria-label="依題型篩選">
+  <a href="#" data-filter="" class="filter-btn">全部 <span class="count">{{ site.questions.size }}</span></a>
+  {%- for c in site.data.categories %}
+  {%- assign n = site.questions | where: "category", c.code | size %}
+  <a href="#{{ c.code }}" data-filter="{{ c.code }}" class="filter-btn" style="--c: var(--cat-{{ c.code }})">{{ c.name }} <span class="count">{{ n }}</span></a>
+  {%- endfor %}
+</nav>
+
+{%- for c in site.data.categories %}
+{%- assign qs = site.questions | where: "category", c.code | sort: "difficulty" %}
+<section class="cat-section" id="{{ c.code }}" data-cat-section="{{ c.code }}" style="--c: var(--cat-{{ c.code }})">
+  <h2 class="cat-heading">{{ c.name }}<span class="cat-desc">{{ c.desc }}</span></h2>
+  {%- if qs.size > 0 %}
+  <div class="grid">
+    {%- for q in qs %}
+    {% include card.html doc=q %}
+    {%- endfor %}
+  </div>
+  {%- else %}
+  <p class="empty">這個題型還沒有題目。新增方式見 <code>CLAUDE.md</code> 10.1。</p>
+  {%- endif %}
+</section>
+{%- endfor %}

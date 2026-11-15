@@ -1,0 +1,53 @@
+---
+layout: default
+title: 履歷
+nav: resumes
+permalink: /resumes/
+---
+{%- assign masters = site.resumes | where: "type", "master" | sort: "date" | reverse -%}
+{%- assign tailored_all = site.resumes | where: "type", "tailored" -%}
+<header class="page-head">
+  <h1>履歷版本</h1>
+  <p class="lead">主版本隨時間更新，職缺版本從主版本複製出來、針對職缺調整。最新的在最上面。</p>
+</header>
+
+{%- if site.resumes.size > 0 %}
+<ol class="timeline">
+  {%- for m in masters %}
+  {%- assign kids = tailored_all | where_exp: "r", "r.base == m.slug" | sort: "date" | reverse %}
+  <li class="tl-node{% if m.status == 'current' %} is-current{% endif %}">
+    {% include card.html doc=m %}
+    {%- if kids.size > 0 %}
+    <ol class="tl-children">
+      {%- for kid in kids %}
+      <li>{% include card.html doc=kid %}</li>
+      {%- endfor %}
+    </ol>
+    {%- endif %}
+  </li>
+  {%- endfor %}
+</ol>
+
+{%- comment -%} 找不到主版本的職缺版本（base 填錯或空白） {%- endcomment -%}
+{%- assign orphans = "" | split: "" -%}
+{%- for t in tailored_all -%}
+  {%- assign parent = masters | where_exp: "m", "m.slug == t.base" -%}
+  {%- if parent.size == 0 -%}{%- assign one = tailored_all | where_exp: "r", "r.slug == t.slug" -%}{%- assign orphans = orphans | concat: one -%}{%- endif -%}
+{%- endfor -%}
+{%- if orphans.size > 0 %}
+<section class="section">
+  <h2 class="section-title">找不到基底主版本的職缺版本</h2>
+  <p class="warn-text">這些檔案的 <code>base</code> 沒有對應到任何主版本，請檢查。</p>
+  <div class="grid grid-compact">
+    {%- for o in orphans %}
+    {% include card.html doc=o %}
+    {%- endfor %}
+  </div>
+</section>
+{%- endif %}
+{%- else %}
+<div class="empty-state">
+  <h2>還沒有履歷</h2>
+  <p>把含聯絡方式的原始履歷放進 <code>private/</code>（不會上傳），再請 AI 依 <code>CLAUDE.md</code> 10.4 產生去識別化的公開版本。公開版不會出現電話、email、地址等個人資料。</p>
+</div>
+{%- endif %}

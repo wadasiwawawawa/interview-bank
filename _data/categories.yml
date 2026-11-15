@@ -1,0 +1,32 @@
+# 六大題型 —— 唯一來源（CLAUDE.md 第 4 節）。版面一律從這裡讀，不在 HTML／CSS 寫死。
+# 不得增減或改名；要調整必須同時修改 CLAUDE.md 第 4 節。
+- code: intro
+  name: 自我介紹
+  desc: 1 分鐘／3 分鐘版本、履歷導讀
+  color: "#4F6D7A"
+  color_dark: "#8FB0BF"
+- code: motivation
+  name: 動機
+  desc: 為什麼選這個產業、這間公司、這個職位
+  color: "#C08A3E"
+  color_dark: "#E0B36E"
+- code: behavioral
+  name: 行為題（STAR）
+  desc: 「請分享一次你……的經驗」
+  color: "#5B8C5A"
+  color_dark: "#8FC08D"
+- code: technical
+  name: 專業題
+  desc: 領域知識、技術原理、作品細節
+  color: "#3E6FB0"
+  color_dark: "#7FA6E0"
+- code: situational
+  name: 情境題
+  desc: 「如果遇到……你會怎麼做」
+  color: "#8A5BA8"
+  color_dark: "#BC93D6"
+- code: reverse
+  name: 反問
+  desc: 面試尾聲我要問面試官的問題
+  color: "#B5545C"
+  color_dark: "#E08A92"

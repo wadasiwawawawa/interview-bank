@@ -1,0 +1,90 @@
+---
+layout: default
+title: 練習
+nav: practice
+permalink: /practice/
+scripts: [practice.js]
+---
+{%- comment -%} 練習模式（CLAUDE.md 第 9 節） {%- endcomment -%}
+<div class="practice" id="practice">
+
+  <section class="pr-screen" id="pr-setup" aria-labelledby="pr-setup-title">
+    <h1 id="pr-setup-title" tabindex="-1">單字卡練習</h1>
+    <p class="lead">正面是題目，背面是快速回答。點一下翻面，<strong>右滑</strong>代表熟了，<strong>左滑</strong>代表還不熟、下一輪再出現。</p>
+
+    <div class="pr-resume" id="pr-resume" hidden>
+      <p id="pr-resume-text"></p>
+      <button type="button" class="btn btn-primary" id="pr-resume-btn">繼續上次的練習</button>
+    </div>
+
+    <form id="pr-form" class="pr-form">
+      <fieldset>
+        <legend>題型</legend>
+        <div class="chips">
+          {%- for c in site.data.categories %}
+          <label class="chip-check" style="--c: var(--cat-{{ c.code }})"><input type="checkbox" name="cat" value="{{ c.code }}" checked> {{ c.name }}</label>
+          {%- endfor %}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>狀態</legend>
+        <div class="chips">
+          <label class="chip-check"><input type="checkbox" name="status" value="ready" checked> 可上場</label>
+          <label class="chip-check"><input type="checkbox" name="status" value="polish" checked> 待修改</label>
+          <label class="chip-check"><input type="checkbox" name="status" value="draft"> 草稿</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>範圍</legend>
+        <div class="chips">
+          <label class="chip-check"><input type="radio" name="scope" value="unmastered" checked> 只練還不熟的</label>
+          <label class="chip-check"><input type="radio" name="scope" value="all"> 全部重練</label>
+        </div>
+      </fieldset>
+    </form>
+
+    <p class="pr-count" id="pr-count" aria-live="polite"></p>
+    <p class="muted" id="pr-missing" hidden></p>
+    <button type="button" class="btn btn-primary btn-block" id="pr-start">開始練習</button>
+
+    <div class="pr-note">
+      <p>練習進度只存在<strong>這台裝置的這個瀏覽器</strong>裡。換手機、換瀏覽器、使用無痕模式或清除網站資料之後，進度會重新開始。題目卡更新之後，那張卡會重新算成「還不熟」。</p>
+      <button type="button" class="btn-link" id="pr-reset">清除練習進度</button>
+    </div>
+  </section>
+
+  <section class="pr-screen" id="pr-deck" hidden aria-label="練習中">
+    <div class="pr-top">
+      <button type="button" class="btn-link" id="pr-exit">← 回到設定</button>
+      <span class="pr-progress" id="pr-progress" aria-live="polite"></span>
+    </div>
+    <div class="pr-bar" aria-hidden="true"><span id="pr-bar-fill"></span></div>
+    <div class="fc-stage" id="fc-stage"></div>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-again" data-act="again">← 還不熟</button>
+      <button type="button" class="btn" data-act="flip">翻面</button>
+      <button type="button" class="btn btn-ok" data-act="ok">熟了 →</button>
+    </div>
+    <p class="pr-keys muted">鍵盤：空白鍵翻面，← 還不熟，→ 熟了</p>
+  </section>
+
+  <section class="pr-screen pr-center" id="pr-summary" hidden aria-labelledby="pr-summary-title">
+    <h2 id="pr-summary-title" tabindex="-1"></h2>
+    <p class="pr-result" id="pr-summary-text"></p>
+    <button type="button" class="btn btn-primary btn-block" id="pr-next">開始下一輪</button>
+    <button type="button" class="btn-link" id="pr-summary-exit">回到設定</button>
+  </section>
+
+  <section class="pr-screen pr-center" id="pr-done" hidden aria-labelledby="pr-done-title">
+    <h2 id="pr-done-title" tabindex="-1">全部都熟了</h2>
+    <p class="pr-result" id="pr-done-text"></p>
+    <button type="button" class="btn btn-primary btn-block" id="pr-again-all">全部重練</button>
+    <button type="button" class="btn-link" id="pr-done-exit">回到設定</button>
+  </section>
+
+  <div id="pr-source" hidden>
+    {%- for q in site.questions %}
+    {% include flashcard.html q=q %}
+    {%- endfor %}
+  </div>
+</div>
